@@ -1,0 +1,136 @@
+/* style.css */
+
+/* 共通のボタンの形 */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fe6b6b;
+}
+
+/* 青色のボタン（新規・更新・詳細など） */
+.btn-primary {
+    background-color: #4f8df0;
+    color: rgb(0, 0, 0);
+}
+
+/* グレーのボタン（戻るなど） */
+.btn-secondary {
+    background-color: #a2a2a2;
+    color: rgb(0, 0, 0);
+}
+
+
+
+
+
+/* テーブル全体の幅を100%（親要素いっぱい）にする */
+.product-table {
+    width: 100%;
+    table-layout: fixed; /* これが重要！列の幅を固定する魔法のプロパティ */
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* 各セルの設定 */
+.product-table th, .product-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    overflow: hidden;         /* 文字が溢れた時に隠す */
+    text-overflow: ellipsis;  /* 長すぎる文字を「...」にする */
+    white-space: nowrap;      /* 勝手に改行させない */
+}
+
+/* 列ごとの幅を個別に指定したい場合（合計100%になるように調整） */
+.col-id { width: 50px; }
+.col-name { width: 200px; }
+.col-price { width: 100px; }
+.col-stock { width: 80px; }
+.col-company { width: 150px; }
+.col-action { width: 180px; } /* ボタンが入る列 */
+
+
+
+
+
+/* ボタンを横並びにするための箱（コンテナ） */
+.action-buttons {
+    display: flex;            /* 中身を横に並べる魔法の命令 */
+    justify-content: center;  /* 中央に寄せる */
+    gap: 5px;                 /* ボタンとボタンの間に5pxの隙間を作る */
+}
+
+/* 削除フォームがブロック要素にならないようにする */
+.action-buttons form {
+    margin: 0;                /* 余計な隙間を消す */
+}
+
+
+
+
+
+
+/* 必須項目用のラベル設定 */
+.required-label::after {
+    content: "＊";      /* ラベルの後に「＊」を表示する */
+    color: red;         /* 色を赤にする */
+    margin-left: 5px;   /* 少し隙間を空ける */
+    font-weight: bold;  /* 太字にする */
+}
+
+
+
+
+
+
+
+
+/* フォームの各行（項目と入力欄のセット） */
+.form-group {
+    display: flex;            /* ラベルと入力を横並びにする */
+    align-items: center;      /* 上下の中心を揃える */
+    margin-bottom: 15px;      /* 行と行の間に隙間を作る */
+}
+
+/* ラベルの幅を固定して揃える */
+.form-group label {
+    width: 120px;             /* ラベルの幅を120pxに固定（一番長い文字に合わせる） */
+    flex-shrink: 0;           /* 画面が狭くなってもラベルが潰れないようにする */
+    margin-bottom: 0;         /* 余計な下余白を消す */
+}
+
+/* 入力ボックスを少し使いやすくする */
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    flex: 1;                  /* 残りの横幅をいっぱいに使う */
+    padding: 6px;             /* ボックスの中に少しゆとりを持たせる */
+    max-width: 400px;         /* 長くなりすぎないように制限をかける */
+}
+
+
+
+
+
+
+
+
+
+/* 詳細画面のテキスト部分（inputの代わりに使う） */
+.form-text {
+    flex: 1;
+    padding: 6px 0; /* 入力ボックスと高さを合わせるための余白 */
+    font-size: 1rem;
+    color: #333;
+}
+
+/* 画像を表示するエリアの調整 */
+.form-image img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #f9f9f9;
+}
