@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product; // 商品モデルを呼び出す
 use App\Models\Company; // 会社モデルを呼び出す
+use App\Http\Requests\ProductRequest;
 
 
 
@@ -102,10 +103,10 @@ class ProductController extends Controller
 
 
 
-    public function store(Request $request) // 新規情報データ登録（保存）
+    public function store(ProductRequest $request) // 新規情報データ登録（保存）
     {
 
-
+        /* レビュー後、ProductRequestに移動（updateメソッドと一緒になっている）
         // --- ここから門番（バリデーション）の仕事 ---
         $request->validate([
             'product_name' => 'required',
@@ -126,7 +127,7 @@ class ProductController extends Controller
         ]);
 
         // --- ここまで門番（バリデーション）の仕事 ---
-    
+        */
 
 
 
@@ -198,9 +199,9 @@ class ProductController extends Controller
 
         
 
-    public function update(Request $request, $id) // 商品情報更新
+    public function update(ProductRequest $request, $id) // 商品情報更新
     {
-
+        /* レビュー後、ProductRequestに移動（storeメソッドと一緒になっている）
         // --- ここから門番（バリデーション）の仕事 ---
         $request->validate([
             'product_name' => 'required',
@@ -221,7 +222,7 @@ class ProductController extends Controller
         ]);
 
         // --- ここまで門番（バリデーション）の仕事 ---
-
+        */
 
 
         // 1. 整理券（$id）を使って、書き換えたい「既存の箱」をDBから探し出す
