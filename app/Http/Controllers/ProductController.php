@@ -52,6 +52,34 @@ class ProductController extends Controller
                 $query->where('company_id', $company_id);
             }
 
+            // --- STEP8. 価格の範囲検索を追加 ---
+            if($min_price = $request->min_price) {
+                $query->where('price', '>=', $min_price); // 最小価格以上
+            }
+            if($max_price = $request->max_price) {
+                $query->where('price', '<=', $max_price); // 最大価格以下
+            }
+
+            // --- STEP8. 在庫数の範囲検索を追加 ---
+            if($min_stock = $request->min_stock) {
+                $query->where('stock', '>=', $min_stock); // 最小在庫以上
+            }
+            if($max_stock = $request->max_stock) {
+                $query->where('stock', '<=', $max_stock); // 最大在庫以下
+            }
+
+
+            // --- STEP8. ソート（並び替え）処理を追加 ---
+            // JSから送られてきた 'sort' (列名) と 'direction' (向き) を取得
+            // もし送られてこなかった時のために、デフォルト値（id, desc）を設定しておく
+            $sort = $request->get('sort', 'id'); 
+            $direction = $request->get('direction', 'desc');
+
+            // 最後に「並べ替えろ！」という命令（orderBy）を書き加える
+            $query->orderBy($sort, $direction);
+
+
+
             // 4. 最後に「絞り込まれた結果」を全部取ってくる！
             $products = $query->get();
 
@@ -75,14 +103,17 @@ class ProductController extends Controller
 
     public function destroy($id) // 商品削除
     {
-        // 1. 整理券（ID）を頼りに、消すべき商品を1つ見つける
-        $product = Product::find($id);
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
 
-        // 2. その商品を「削除（delete）」する
-        $product->delete();
+            // ページを返すのではなく、JSON（データ）を返します
+            return response()->json(['success' => true]);
 
-        // 3. 削除が終わったら、一覧画面にリダイレクト（戻る）
-        return redirect()->route('product.list');
+        } catch (\Exception $e) {
+            // 失敗した場合はエラーメッセージを返す
+            return response()->json(['success' => false], 500);
+        }
     }
 
 
@@ -105,33 +136,6 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request) // 新規情報データ登録（保存）
     {
-
-        /* レビュー後、ProductRequestに移動（updateメソッドと一緒になっている）
-        // --- ここから門番（バリデーション）の仕事 ---
-        $request->validate([
-            'product_name' => 'required',
-            'company_id'   => 'required', // メーカーID
-            'price'        => 'required | integer',
-            'stock'        => 'required | integer',
-            'comment'      => 'nullable',
-            'img_path'     => 'nullable | image',
-        ], [
-            // ここに「エラーメッセージ」を書くと、日本語で表示できます
-            'product_name.required' => '商品名は必須項目です。',
-            'company_id.required'   => 'メーカーを選択してください。',
-            'price.required'        => '価格は必須項目です。',
-            'price.integer'         => '価格は数値で入力してください。',
-            'stock.required'        => '在庫数は必須項目です。',
-            'stock.integer'         => '在庫数は数値で入力してください。',
-
-        ]);
-
-        // --- ここまで門番（バリデーション）の仕事 ---
-        */
-
-
-
-
         // 1. 新しい「商品の空箱」を作る
         $product = new Product();
 
@@ -200,31 +204,7 @@ class ProductController extends Controller
         
 
     public function update(ProductRequest $request, $id) // 商品情報更新
-    {
-        /* レビュー後、ProductRequestに移動（storeメソッドと一緒になっている）
-        // --- ここから門番（バリデーション）の仕事 ---
-        $request->validate([
-            'product_name' => 'required',
-            'company_id'   => 'required', // メーカーID
-            'price'        => 'required | integer',
-            'stock'        => 'required | integer',
-            'comment'      => 'nullable',
-            'img_path'     => 'nullable | image',
-        ], [
-            // ここに「エラーメッセージ」を書くと、日本語で表示できます           
-            'product_name.required' => '商品名は必須項目です。',
-            'company_id.required'   => 'メーカーを選択してください。',
-            'price.required'        => '価格は必須項目です。',
-            'price.integer'         => '価格は数値で入力してください。',
-            'stock.required'        => '在庫数は必須項目です。',
-            'stock.integer'         => '在庫数は数値で入力してください。',
-
-        ]);
-
-        // --- ここまで門番（バリデーション）の仕事 ---
-        */
-
-
+    {   
         // 1. 整理券（$id）を使って、書き換えたい「既存の箱」をDBから探し出す
         $product = Product::find($id);
 

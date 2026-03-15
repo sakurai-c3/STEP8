@@ -134,3 +134,18 @@
     padding: 5px;
     background-color: #f9f9f9;
 }
+
+
+
+
+
+
+
+/* ソート可能な見出し（.sortクラス）への設定 */
+.sort {
+    cursor: pointer; /* マウスを乗せると指マークになる */
+}
+
+.sort:hover {
+    background-color: #f8f9fa; /* マウスを乗せた時に少し色を変えるとより親切！ */
+}

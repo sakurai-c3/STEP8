@@ -10,7 +10,7 @@
 
 
     <div class="search-form">
-        <form action="{{ route('product.list') }}" method="GET">
+        <form action="{{ route('product.list') }}" method="GET" id="search-form">
             <input type="text" name="search" placeholder="検索キーワード" value="{{ request('search') }}">
 
             <select name="company_id">
@@ -22,20 +22,28 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-primary">検索</button>
+            <input type="number" name="min_price" placeholder="最小価格"> 〜 
+            <input type="number" name="max_price" placeholder="最大価格">
+
+            <input type="number" name="min_stock" placeholder="最小在庫"> 〜 
+            <input type="number" name="max_stock" placeholder="最大在庫">
+
+
+            <button type="submit" id="search-button" class="btn btn-primary">検索</button>
+    
         </form>
     </div>
 
     {{-- tableに class="product-table" を追加 --}}
-    <table class="product-table">
+    <table class="product-table" id="product-table">
         <thead>
             <tr>
                 {{-- 各列に幅指定用のクラスを付ける --}}
-                <th class="col-id">ID</th>
-                <th class="col-name">商品名</th>
-                <th class="col-price">価格</th>
-                <th class="col-stock">在庫数</th>
-                <th class="col-company">メーカー名</th>
+                <th class="col-id sort" data-sort="id">ID</th>
+                <th class="col-name sort" data-sort="product_name">商品名</th>
+                <th class="col-price sort" data-sort="price">価格</th>
+                <th class="col-stock sort" data-sort="stock">在庫数</th>
+                <th class="col-company sort" data-sort="company_id">メーカー名</th>
                 <th class="col-action">
                         <a href="{{ route('product.new') }}" class="btn btn-secondary">新規登録</a>
                     </div>
@@ -44,7 +52,7 @@
         </thead>
         <tbody>
             @foreach ($products as $product)
-                <tr>
+                <tr id="product-row-{{ $product->id }}"> {{-- 行全体にIDをつける --}}
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->product_name }}</td>
                     <td>{{ $product->price }}円</td>
@@ -54,12 +62,8 @@
                         <div class="action-buttons">
                             <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">詳細</a>
 
-                        
-                            <form action="{{ route('product.destroy', $product->id) }}" method="POST" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn">削除</button>                          
-                            </form>
+                            {{-- formタグは削除し、buttonタグだけにします。jsで制御するため class="btn-delete" と data-id を追加 --}}
+                            <button type="button" class="btn btn-delete" data-id="{{ $product->id }}">削除</button>
                             
                         </div>
                     </td>
